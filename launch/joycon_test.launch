@@ -1,0 +1,11 @@
+<launch>
+  <!-- joy node -->
+  <node pkg="joy" type="joy_node" name="mecanumrover_joy" respawn="true" >
+    <param name="dev" type="string" value="/dev/input/js0" />
+    <param name="deadzone" value="0.1" />
+  </node>
+
+  <!-- joycon -->
+  <node pkg="lightrover_ros" type="rover_gamepad.py" name="rover_gamepad" />
+
+</launch>

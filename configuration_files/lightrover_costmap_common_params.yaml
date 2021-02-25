@@ -1,0 +1,23 @@
+# costmap common params for lightROVER
+
+# ロボットの大きさに関するパラメータ
+footprint: [[0.07, -0.07], [0.07, 0.07], [-0.07, 0.07], [-0.07, -0.07]]
+#inflation_radius: 0.07
+
+obstacle_layer:
+  enabled: true
+
+  # これ以下の距離にある物体を障害物として扱う
+  obstacle_range: 3.5
+
+  # これ以下の距離に物体が検出された場合、ロボットとその物体との間に障害物はないものとして扱う
+  raytrace_range: 5.0
+
+  # LRFの設定
+  observation_sources: laser_scan_sensor
+  laser_scan_sensor: {sensor_frame: lrf_link, data_type: LaserScan, topic: scan, marking: true, clearing: true}
+
+inflation_layer:
+  enabled: true
+  inflation_radius: 0.07
+

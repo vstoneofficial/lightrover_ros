@@ -1,0 +1,40 @@
+<!--
+SLAM(gmapping)のテスト
+起動コマンド:roslaunch wrs201_ros gmapping.launch
+-->
+
+<launch>
+  <node pkg="lightrover_ros" type="i2c_controller.py" name="rover_i2c_controller" />
+  <node pkg="lightrover_ros" type="odometry.py" name="rover_odometry" />
+  <node pkg="tf" type="static_transform_publisher" name="odom_2_base_link" args="-0.042 0 0.1094 -1.5708  0 0 base_link laser 1" /> 
+
+  <node name="ydlidar_node"  pkg="ydlidar_ros"  type="ydlidar_node" output="screen" respawn="false" >
+    <param name="port"         type="string" value="/dev/ydlidar"/>
+    <param name="baudrate"         type="int" value="115200"/>
+    <param name="frame_id"     type="string" value="laser"/>
+    <param name="resolution_fixed"    type="bool"   value="true"/>
+    <param name="auto_reconnect"    type="bool"   value="true"/>
+    <param name="reversion"    type="bool"   value="false"/>
+    <param name="angle_min"    type="double" value="-180" />
+    <param name="angle_max"    type="double" value="180" />
+    <param name="range_min"    type="double" value="0.1" />
+    <param name="range_max"    type="double" value="12.0" />
+    <param name="ignore_array" type="string" value="" />
+    <param name="frequency"    type="double" value="8"/>
+    <param name="samp_rate"    type="int"    value="3"/>
+    <param name="isSingleChannel"    type="bool"   value="true"/>
+  </node>
+
+  <!-- gmapping -->
+  <node pkg="gmapping" type="slam_gmapping" name="mapper">
+    <param name="maxUrange" value="8.0" type="double" />
+    <param name="delta" value="0.03" />
+    <param name="xmax" value="30" type="double" />
+    <param name="ymax" value="30" type="double" />
+    <param name="xmin" value="-30" type="double" />
+    <param name="ymin" value="-30" type="double" />
+  </node>
+
+  <node pkg="rviz" type="rviz" args="-d '$(find lightrover_ros)/configuration_files/rviz/gmapping.rviz'" name="visualizer" respawn="true" />
+
+</launch>

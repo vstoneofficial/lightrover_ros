@@ -18,10 +18,13 @@ DWAPlannerROS:
   xy_goal_tolerance: 0.1
   latch_xy_goal_tolerance: true
 
-  sim_time: 1.0
-  sim_granularity: 0.05
-  vx_samples: 5
-  vtheta_samples: 5
+  trans_stopped_vel: 0.01 
+  theta_stopped_vel: 0.01 
+
+  sim_time: 2.0
+  sim_granularity: 0.025
+  vx_samples: 3
+  vtheta_samples: 10
 
   path_distance_bias: 72.0
   goal_distance_bias: 28.0

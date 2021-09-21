@@ -12,6 +12,8 @@ speed = Twist()
 def call_back(data):
         global speed
 
+        #ゲームパッドの入力値からライトローバーの直進・旋回速度を算出
+        #ゲームパッドによってボタン、アナログスティック等の配列要素は違うことに注意
         speed.linear.x = data.axes[1]*0.1
         speed.angular.z = data.axes[2]*2.0
 

@@ -39,7 +39,7 @@ read_enc = rospy.ServiceProxy('wrc201_i2c',Wrc201Msg)
 def getEncVal():
 
         try:
-
+                #VS-WRC201上のマイコンからエンコーダ値を取得
                 enc_a = read_enc(MS32_M_POS0,0,4,'r')
                 enc_b = read_enc(MS32_M_POS1,0,4,'r')
 
@@ -63,15 +63,19 @@ def calSpeed():
                 print('None')
                 return None
 
+        #以前のエンコーダ値と現在のエンコーダ値の差を算出
         for i in range(2):
                 if(abs(enc_val[i]-pre_count[i]) < DIFF_COUNT_LIMIT):
                         diff_count[i] = -1.0 * (enc_val[i]-pre_count[i])
 
         pre_count = enc_val
 
+        #各タイヤの移動距離を算出
         distance = [float(diff_count[0])/ENC_PER_M,float(diff_count[1])/ENC_PER_M]
+        #各タイヤの回転速度を算出
         speed = [distance[0]/diff_time, distance[1]/diff_time]
 
+        #本体の直進・旋回速度を算出
         linear_x = ((speed[0] - speed[1])/2.0)
         angular_z = -1.0 * ((speed[0] + speed[1])/(2.0*ROVER_D))
 

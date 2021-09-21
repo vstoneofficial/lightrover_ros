@@ -7,6 +7,7 @@ import smbus
 import time
 
 class VsWrc201I2c:
+        #メモリマップアドレス
         DEV_ADDR = 0x10
         MAP_SIZE = 0x100
 
@@ -107,17 +108,20 @@ class VsWrc201I2c:
 
                 return 1
 
+        #メモリマップ初期化
         def init_memmap(self,cut_off_level):
                 cut_off_hex = int((cut_off_level/3.3)*0xfff)
                 self.write_memmap(self.MU8_O_EN,self.initialMemmap,0xF0)
                 self.read_all()
                 self.write_s16map(self.MU16_SD_VI,cut_off_hex)
 
+        #VS-WRC201上のマイコンのメモリマップの特定アドレスを上書き（1byte）
         def write_1_byte(self,addr,data):
                 self.__i2c.write_byte_data(self.DEV_ADDR,addr,data)
 
                 return 1
 
+        #VS-WRC201上のマイコンのメモリマップの特定アドレスを上書き（2byte）
         def write_2_byte(self,addr,data):
                 for i in range(2):
                         write_byte = ((data >> (i*8)) & 0xff)
@@ -125,6 +129,7 @@ class VsWrc201I2c:
 
                 return 1
 
+        #VS-WRC201上のマイコンのメモリマップの特定アドレスを上書き（4byte）
         def write_4_byte(self,addr,data):
                 for i in range(4):
                         write_byte = ((data >> (i*8)) & 0xff)
@@ -132,6 +137,7 @@ class VsWrc201I2c:
 
                 return 1
 
+        #VS-WRC201上のマイコンのメモリマップの特定アドレスから指定バイト分上書き
         def write_memmap(self,addr,data_array,length):
                 if length<=0:
                         return -1
@@ -141,10 +147,13 @@ class VsWrc201I2c:
 
                 return 1
 
+        #ラズパイのメモリマップをすべてクリア
         def memmap_clean(self):
                 for i in range(self.MAP_SIZE):
                         self.memmap[i] = 0x00
 
+        #VS-WRC201上のマイコンのメモリマップの特定アドレスから指定バイト分読み込み
+        #ラズパイのメモリマップへ反映
         def read_memmap(self,addr,length):
                 read_addr = addr-1
 
@@ -156,6 +165,8 @@ class VsWrc201I2c:
 
                 return i
 
+        #VS-WRC201上のマイコンのメモリマップをすべて読み込み
+        #ラズパイのメモリマップへ反映
         def read_all(self):
                 self.read_memmap(0x00,64)
                 self.read_memmap(0x40,64)
@@ -163,6 +174,7 @@ class VsWrc201I2c:
 
                 return 1
 
+        #ラズパイ上のメモリマップをVS-WRC201のマイコンのメモリマップへ反映
         def send_write_map(self):
                 for i in range(0x12,0x90):
                         head_addr = i
@@ -187,27 +199,33 @@ class VsWrc201I2c:
                         write_map = self.memmap[head_addr:head_addr+length]
                         self.write_memmap(head_addr,write_map,length)
 
+        #ラズパイのメモリマップの読み込み（1byte）
         def read_s8map(self,addr):
                 return self.memmap[addr]
 
+        #ラズパイのメモリマップの上書き（1byte）
         def write_s8map(self,addr,data):
                 self.memmap[addr] = data
                 self.write_flag[addr] = 0x01
 
                 return self.memmap[addr]
 
+        #ラズパイのメモリマップの読み込み（2byte）
         def read_s16map(self,addr):
                 return ((self.memmap[addr+1] << 8) | self.memmap[addr])
 
+        #ラズパイのメモリマップの上書き（2byte）
         def write_s16map(self,addr,data):
                 self.memmap[addr] = (0xff & data)
                 self.memmap[addr+1] = ((0xff00 & data) >> 8)
                 self.write_flag[addr] = 0x0101
                 return ((self.memmap[addr+1] << 8) | self.memmap[addr])
 
+        #ラズパイのメモリマップの読み込み（4byte）
         def read_s32map(self,addr):
                 return ((self.memmap[addr+3] << 24) | (self.memmap[addr+2] << 16) | (self.memmap[addr+1] << 8) | self.memmap[addr])
 
+        #ラズパイのメモリマップの上書き（4byte）
         def write_s32map(self,addr,data):
                 self.memmap[addr] = (0xff & data)
                 self.memmap[addr+1] = ((0xff00 & data) >> 8)
@@ -216,18 +234,22 @@ class VsWrc201I2c:
                 self.write_flag[addr] = 0x01010101
                 return ((self.memmap[addr+3] << 24) | (self.memmap[addr+2] << 16) | (self.memmap[addr+1] << 8) | self.memmap[addr])
 
+        #エンコーダ値の読み込み
         def read_enc(self):
                 encL = self.read_s32map(self.MS32_M_POS0)
                 encR = self.read_s32map(self.MS32_M_POS1)
 
                 return [encL,encR]
 
+        #エンコーダ値をクリア
         def clear_enc(self):
                 self.write_s8map(self.MU8_TRIG,self.read_s8map(self.MU8_TRIG) | 0x0C)
 
+        #メモリマップへ書き込みを行ったかを確認
         def check_write_flag(self,addr):
                 return self.write_flag[addr]
 
+        #電源電圧の取得
         def get_vin(self):
                 self.read_memmap(self.MU16_M_VI, 0x02)
                 memmapV = self.read_s16map(self.MU16_M_VI)

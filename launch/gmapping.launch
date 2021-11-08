@@ -1,11 +1,9 @@
 <!--
-SLAM(gmapping)のテスト
-起動コマンド:roslaunch wrs201_ros gmapping.launch
+SLAM(gmapping)用launch
+起動コマンド:roslaunch lightrover_ros gmapping.launch
 -->
 
 <launch>
-  <node pkg="lightrover_ros" type="i2c_controller.py" name="rover_i2c_controller" />
-  <node pkg="lightrover_ros" type="odometry.py" name="rover_odometry" />
   <node pkg="tf" type="static_transform_publisher" name="odom_2_base_link" args="-0.042 0 0.1094 -1.5708  0 0 base_link lidar_link 1" /> 
 
   <node name="ydlidar_node"  pkg="ydlidar_ros"  type="ydlidar_node" output="screen" respawn="false" >

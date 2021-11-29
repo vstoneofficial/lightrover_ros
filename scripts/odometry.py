@@ -45,8 +45,8 @@ def getEncVal():
 
                 return enc_a.readData,enc_b.readData
 
-        except rospy.ServiceException, e:
-                print 'Service call failed: %s' %e
+        except rospy.ServiceException as e:
+                rospy.loginfo('Service call failed: %s',e)
 
 def calSpeed():
         global diff_time
@@ -152,7 +152,7 @@ def lightrover_odometry():
                         rate.sleep()
 
 if __name__=="__main__":
-        print 'Start calculate odometry'
+        rospy.loginfo('Start calculate odometry')
         try:
                 lightrover_odometry()
         except rospy.ROSInterruptException:

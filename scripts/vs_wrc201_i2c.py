@@ -155,13 +155,8 @@ class VsWrc201I2c:
         #VS-WRC201上のマイコンのメモリマップの特定アドレスから指定バイト分読み込み
         #ラズパイのメモリマップへ反映
         def read_memmap(self,addr,length):
-                read_addr = addr-1
-
                 for i in range(length+1):
-                        if i==0:
-                                self.__i2c.read_byte_data(self.DEV_ADDR,read_addr+i)
-                        else:
-                                self.memmap[read_addr+i] = self.__i2c.read_byte_data(self.DEV_ADDR, read_addr+i)
+                        self.memmap[addr+i] = self.__i2c.read_byte_data(self.DEV_ADDR, addr+i)
 
                 return i
 

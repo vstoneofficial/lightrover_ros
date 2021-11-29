@@ -71,7 +71,7 @@ def wrc201_i2c_server():
         i2c.init_memmap(2.0)
         i2c.send_write_map()
         s = rospy.Service('wrc201_i2c',Wrc201Msg,handle_wrc201_i2c)
-        print 'Ready to VS-WRC201 i2c communication.'
+        rospy.loginfo('Ready to VS-WRC201 i2c communication.')
         rospy.spin()
 
 if __name__ == "__main__":

@@ -69,7 +69,7 @@ def pos_cntrl():
         rospy.init_node('pos_controller', anonymous=True)
         rospy.wait_for_service('wrc201_i2c')
 
-        print('Start POS Controll')
+        rospy.loginfo('Start POS Controll')
 
         write_msg(MU8_O_EN,0x00,1,'w')          #モータ出力禁止
         write_msg(MU8_TRIG,0x0c,1,'w')          #エンコーダリセット

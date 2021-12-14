@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 #このプログラムは、ライトローバーを速度制御するためのノードです。
@@ -57,7 +57,7 @@ def drive_motor(r_speed, l_speed):
 def lightrover_pid_controller():
         rospy.init_node('listenr', anonymous=True)
 
-        print('Start PID')
+        rospy.loginfo('Start PID')
 
         write_msg(MU8_TRIG,0x03,1,'w')          #エンコーダリセット
         write_msg(MS16_FB_PG0,0,2,'w')          #モータ0位置補償Pゲイン設定

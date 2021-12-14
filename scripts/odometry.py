@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 #このプログラムは、ライトローバーのオドメトリを取得するためのノードです。
@@ -45,8 +45,8 @@ def getEncVal():
 
                 return enc_a.readData,enc_b.readData
 
-        except rospy.ServiceException, e:
-                print 'Service call failed: %s' %e
+        except rospy.ServiceException as e:
+                rospy.loginfo('Service call failed: %s',e)
 
 def calSpeed():
         global diff_time

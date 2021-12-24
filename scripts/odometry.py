@@ -152,7 +152,7 @@ def lightrover_odometry():
                         rate.sleep()
 
 if __name__=="__main__":
-        print 'Start calculate odometry'
+        rospy.loginfo('Start calculate odometry')
         try:
                 lightrover_odometry()
         except rospy.ROSInterruptException:

@@ -29,7 +29,7 @@ MS16_T_OUT1 = 0x52
 MU16_FB_PCH0 = 0x30
 MU16_FB_PCH1 = 0x32
 
-liner_x = 0.0
+linear_x = 0.0
 angular_z = 0.0
 
 current_v = [0.0, 0.0]
